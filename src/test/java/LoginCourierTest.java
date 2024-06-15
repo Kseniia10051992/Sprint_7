@@ -11,9 +11,8 @@ import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.greaterThan;
-
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 @Slf4j
 public class LoginCourierTest extends GeneralTest {
@@ -31,7 +30,7 @@ public class LoginCourierTest extends GeneralTest {
     public void setUp() {
         courierCreating = generator.getCourierCreating();
         clientCourier.create(courierCreating);
-       authorizationCourier = generator.getAuthorizationCourier(courierCreating);
+        authorizationCourier = generator.getAuthorizationCourier(courierCreating);
     }
 
     @Test
@@ -67,9 +66,11 @@ public class LoginCourierTest extends GeneralTest {
         Response response = clientCourier.authorizationWithoutPassword(authWithoutPassword);
         log.info(RESPONSE + "\n", response.body().asString());
 
-        response.then().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .and().body(MESSAGE_FIELD, equalTo(INSUFFICIENT_DATA));
-    }
+        response.then().statusCode( HttpStatus.SC_BAD_REQUEST )
+                .and().body( MESSAGE_FIELD,equalTo( INSUFFICIENT_DATA ));
+
+
+}
 
     @Test
     @DisplayName("Авторизация под несуществующим пользователем")
@@ -81,7 +82,7 @@ public class LoginCourierTest extends GeneralTest {
         Response response = clientCourier.login(courierForAuthNotCreate);
         log.info(RESPONSE + "\n", response.body().asString());
 
-        response.then().statusCode(HttpStatus.SC_NOT_FOUND)
+        response.then().statusCode( HttpStatus.SC_NOT_FOUND)
                 .and().body(MESSAGE_FIELD, equalTo(ACCOUNT_NOT_FOUND));
     }
 }
